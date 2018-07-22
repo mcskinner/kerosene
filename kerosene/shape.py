@@ -105,10 +105,16 @@ def line(y0, y1):
     return Shift(Scale(LineShape(), y1-y0), y0)
 
 
+def triangle(y0, y1):
+    """A symmetrical triangle from y0 to y1 and back."""
+
+    return Chain(line(y0, y1), line(y1, y0))
+
+
 def clr(lr_factor=10):
     """A symmetrical triangle from 1/lr_factor to 1 to 1/lr_factor."""
 
-    return stlr(lr_factor, 1/2)
+    return triangle(1, 1/lr_factor)
 
 
 def stlr(lr_factor=10, up_share=1/4):
