@@ -35,6 +35,7 @@ class ProgrammableOptimizer(object):
     """Make it easy to program the parameters of a PyTorch optimizer.
 
     The parameters here are well suited for automation via the shape package.
+    See sched.CLR for an example usage.
     """
 
     def __init__(self, optim):
