@@ -34,13 +34,12 @@ class CLR(Schedule):
     inject that value as a method parameter.
     """
 
-    def __init__(self, optim, nb, **kwargs):
+    def __init__(self, optim, nb, lr_factor=10, momentums=None):
         self.nb = nb
         self.optim = optim
         self.init_lrs = optim.get_lrs()
-        self.lr_shape = shape.clr(kwargs.pop('lr_factor', 10))
+        self.lr_shape = shape.clr(lr_factor)
 
-        momentums = kwargs.pop('momentums', None)
         if momentums is None:
             self.momentum_shape = None
         elif util.is_listy(momentums):
