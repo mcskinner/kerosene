@@ -3,6 +3,7 @@ import torch
 
 
 from . import batches, optimizer, sched, torch_util
+from .interactive import tnrange, tqdm
 
 
 def fit_and_finish(model, opt_fn, loss_fn, trn_dl, val_dl, n_epochs, lr):
@@ -15,13 +16,13 @@ def fit_and_finish(model, opt_fn, loss_fn, trn_dl, val_dl, n_epochs, lr):
 
 def fit(mgr, trn_dl, val_dl, n_epochs):
     mgr.init_training()
-    for epoch in range(n_epochs):
+    for epoch in tnrange(n_epochs, desc='Epoch'):
         mgr.set_train()
         train_loss, _ = run_epoch(mgr.train_runner(), trn_dl)
 
         mgr.set_eval()
         with torch.no_grad():  # Assumes PyTorch 0.4
-            val_loss, val_metrics = run_epoch(mgr.eval_runner(), val_dl)
+            val_loss, val_metrics = run_epoch(mgr.eval_runner(), val_dl, track_progress=False)
 
         if epoch == 0:
             _print_names(mgr.metrics)
@@ -30,10 +31,13 @@ def fit(mgr, trn_dl, val_dl, n_epochs):
     return val_loss, val_metrics
 
 
-def run_epoch(runner, dl):
+def run_epoch(runner, dl, track_progress=True):
     tracked = runner.tracked()
+    batches = tqdm(dl, leave=False, total=len(dl), miniters=0) if track_progress else dl
     for *x, y in batches:
-        tracked.run(torch_util.variable(x), torch_util.variable(y))
+        loss = tracked.run(torch_util.variable(x), torch_util.variable(y))
+        if track_progress:
+            batches.set_postfix(loss=loss, refresh=False)
     return tracked.report()
 
 
