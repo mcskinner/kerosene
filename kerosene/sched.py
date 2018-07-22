@@ -63,4 +63,4 @@ class CLR(Schedule):
     def _set_params(self):
         self.optim.set_lrs(self.init_lrs * self.lr_shape(self.cycle_iter / self.nb))
         if self.momentum_shape is not None:
-            self.optim.set_mom(self.momentum_shape(self.cycle_iter / self.nb))
+            self.optim.set_momentums(self.momentum_shape(self.cycle_iter / self.nb))

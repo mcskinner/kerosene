@@ -1,6 +1,6 @@
 import numpy as np
 
-import util
+from . import util
 
 
 def make(opt_fn, layer_groups, lrs, wds=0):

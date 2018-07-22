@@ -114,7 +114,7 @@ def triangle(y0, y1):
 def clr(lr_factor=10):
     """A symmetrical triangle from 1/lr_factor to 1 to 1/lr_factor."""
 
-    return triangle(1, 1/lr_factor)
+    return triangle(1/lr_factor, 1)
 
 
 def stlr(lr_factor=10, up_share=1/4):
