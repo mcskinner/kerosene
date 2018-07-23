@@ -35,7 +35,7 @@ class Manager():
             loss.backward()
             self.optim.step()
             self.schedule.step()
-        return loss.data.item(), preds
+        return _item(loss.data), preds
 
     def train_runner(self):
         _set_train(self.model)
@@ -50,6 +50,10 @@ class Manager():
             self.model.reset()
         metric_fns = self.metrics if with_metrics else []
         return TrackedRunner(self, with_step, metric_fns, ema_window)
+
+
+def _item(x):
+    return x.item() if hasattr(x, 'item') else x[0]
 
 
 class TrackedRunner(object):
