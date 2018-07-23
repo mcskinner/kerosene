@@ -102,6 +102,13 @@ def test_one_cycle_schedule():
     assert list(optim.get_momentums()) == pytest.approx([3/4, 3/4])
 
 
+def test_nop_is_fine():
+    schedule = sched.nop()
+    schedule.init_training()
+    for _ in range(4):
+        schedule.step()
+
+
 def test_not_yet_programmable_parameter():
     optim = optimizer.ProgrammableOptimizer(MockOptimizer(2))
     optim.set_lrs([1, 2])
@@ -109,3 +116,13 @@ def test_not_yet_programmable_parameter():
     with pytest.raises(NotImplementedError):
         schedule = sched.Schedule(optim, 4, {'rando': shape.line(1/4, 3/4)})
         schedule.init_training()
+
+
+def test_step_past_finish_fails():
+    optim = optimizer.ProgrammableOptimizer(MockOptimizer(2))
+    schedule = sched.Schedule(optim, 4, {})
+    schedule.init_training()
+    for _ in range(4):
+        schedule.step()
+    with pytest.raises(ValueError):
+        schedule.step()

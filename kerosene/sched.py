@@ -14,7 +14,7 @@ class Schedule(object):
     def __init__(self, optim, nb, param_shapes):
         self.nb = nb
         self.optim = optim
-        self.init_lrs = optim.get_lrs()
+        self.init_lrs = None if optim is None else optim.get_lrs()
         self.param_shapes = param_shapes
 
     def init_training(self):
@@ -40,8 +40,8 @@ class Schedule(object):
                 raise NotImplementedError(f'unsupported param: {param}')
 
 
-def nop(optim, nb):
-    return Schedule(optim, nb, {})
+def nop():
+    return Schedule(None, 0, {})
 
 
 def clr(optim, nb, lr_factor=10, momentums=None):
