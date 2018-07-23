@@ -28,7 +28,7 @@ def make(opt_fn, layer_groups, lrs, wds=0):
 
 
 def _trainable_params(group):
-    return [p for layer in util.listify(group) for p in layer if p.requires_grad]
+    return [p for layer in util.listify(group) for p in layer.parameters() if p.requires_grad]
 
 
 class ProgrammableOptimizer(object):
