@@ -44,12 +44,11 @@ def test_bad_average_weights():
 
 
 def test_tracked_runner():
-    metrics = [accuracy, mean_err]
-    runner = batches.TrackedRunner(MockManager(), False, metrics, ema_window=2)
+    runner = batches.TrackedRunner(MockManager(), False, [accuracy, mean_err], ema_window=2)
 
-    assert runner.run(np.array([1]), Var(2)) == (1/2) / (1/2)
-    assert runner.run(np.array([2]), Var(4)) == (1/4 + 1) / (3/4)
-    assert runner.run(np.array([3]), Var(6)) == (1/8 + 1/2 + 3/2) / (7/8)
+    assert runner.run(array([1]), Var(2)) == (1/2) / (1/2)
+    assert runner.run(array([2]), Var(4)) == (1/4 + 1) / (3/4)
+    assert runner.run(array([3]), Var(6)) == (1/8 + 1/2 + 3/2) / (7/8)
 
     loss, metrics = runner.report()
     assert loss == 2
@@ -64,14 +63,19 @@ def mean_err(lhs, rhs):
     return np.sum(np.abs(lhs - rhs))
 
 
+def array(x):
+    return np.array([x])
+
+
 class Var(object):
     def __init__(self, val):
-        self.data = np.array([val])
+        self.data = array(val)
 
 
 class MockManager(object):
     def __init__(self):
         self.metric_fns = [accuracy]
+        self.seq_first = False
 
     def step(self, xs, y, with_step):
         return xs, Var(0)

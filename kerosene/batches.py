@@ -21,7 +21,7 @@ class Manager():
         self.model = model
         self.optim = optim
         self.loss = loss
-        self.schedule = schedule or sched.NopSchedule()
+        self.schedule = schedule or sched.nop()
         self.metrics = metrics or []
         self.seq_first = seq_first
 
