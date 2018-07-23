@@ -30,13 +30,12 @@ def fit(mgr, trn_dl, val_dl, n_epochs):
 
 
 def run_epoch(runner, dl, track_progress=True):
-    tracked = runner.tracked()
     batches = tqdm(dl, leave=False, total=len(dl), miniters=0) if track_progress else dl
     for *x, y in batches:
-        loss = tracked.run(torch_util.variable(x), torch_util.variable(y))
+        loss = runner.run(torch_util.variable(x), torch_util.variable(y))
         if track_progress:
             batches.set_postfix(loss=loss, refresh=False)
-    return tracked.report()
+    return runner.report()
 
 
 def _print_names(metrics):
