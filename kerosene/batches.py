@@ -17,12 +17,13 @@ class Manager():
     See loop.fit for usage.
     """
 
-    def __init__(self, model, optim, loss, schedule=None, metrics=None):
+    def __init__(self, model, optim, loss, schedule=None, metrics=None, seq_first=False):
         self.model = model
         self.optim = optim
         self.loss = loss
         self.schedule = schedule or sched.NopSchedule()
         self.metrics = metrics or []
+        self.seq_first = seq_first
 
     def init_training(self):
         self.schedule.init_training()
@@ -70,7 +71,8 @@ class TrackedRunner(object):
     def run(self, xs, y):
         loss, preds = self.mgr.step(xs, y, self.with_step)
         metrics = [fn(preds.data, y.data) for fn in self.metric_fns]
-        batch_sz = (xs[0] if util.is_listy(xs) else xs).shape[0]
+        x0 = xs[0] if util.is_listy(xs) else xs
+        batch_sz = x0.shape[1 if self.mgr.seq_first else 0]
         self.avg_loss.update(loss, wt=batch_sz)
         for average, metric in zip(self.avg_metrics, metrics):
             average.update(metric, wt=batch_sz)

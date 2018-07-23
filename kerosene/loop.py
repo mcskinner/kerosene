@@ -4,11 +4,15 @@ from . import batches, optimizer, sched, torch_util
 from .interactive import tnrange, tqdm
 
 
-def fit_and_finish(model, opt_fn, loss_fn, trn_dl, val_dl, n_epochs, lr):
+def fit_and_finish(
+    model, opt_fn, loss_fn,
+    trn_dl, val_dl, n_epochs, lr,
+    metrics=None, seq_first=False
+):
     n_batches = n_epochs * len(trn_dl)
     optim = optimizer.make(opt_fn, model, lr)
     schedule = sched.CLR(optim, n_batches, momentums=(0.95, 0.85))
-    mgr = batches.Manager(model, optim, loss_fn, schedule)
+    mgr = batches.Manager(model, optim, loss_fn, schedule, metrics, seq_first)
     return fit(mgr, trn_dl, val_dl, n_epochs)
 
 
