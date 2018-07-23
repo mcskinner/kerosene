@@ -17,10 +17,8 @@ def fit_and_finish(model, opt_fn, loss_fn, trn_dl, val_dl, n_epochs, lr):
 def fit(mgr, trn_dl, val_dl, n_epochs):
     mgr.init_training()
     for epoch in tnrange(n_epochs, desc='Epoch'):
-        mgr.set_train()
         train_loss, _ = run_epoch(mgr.train_runner(), trn_dl)
 
-        mgr.set_eval()
         with torch.no_grad():  # Assumes PyTorch 0.4
             val_loss, val_metrics = run_epoch(mgr.eval_runner(), val_dl, track_progress=False)
 
