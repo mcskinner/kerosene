@@ -1,6 +1,4 @@
 import numpy as np
-import torch
-
 
 from . import batches, optimizer, sched, torch_util
 from .interactive import tnrange, tqdm
@@ -19,7 +17,7 @@ def fit(mgr, trn_dl, val_dl, n_epochs):
     for epoch in tnrange(n_epochs, desc='Epoch'):
         train_loss, _ = run_epoch(mgr.train_runner(), trn_dl)
 
-        with torch.no_grad():  # Assumes PyTorch 0.4
+        with torch_util.no_grad():
             val_loss, val_metrics = run_epoch(mgr.eval_runner(), val_dl, track_progress=False)
 
         if epoch == 0:

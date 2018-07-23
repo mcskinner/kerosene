@@ -1,3 +1,4 @@
+import contextlib
 import numpy as np
 import torch
 
@@ -38,3 +39,7 @@ def create_tensor(x):
     if x.dtype in (np.float32, np.float64):
         return torch.FloatTensor(x)
     raise NotImplementedError(x.dtype)
+
+
+def no_grad():
+    return torch.no_grad() if IS_TORCH_04 else contextlib.suppress()
