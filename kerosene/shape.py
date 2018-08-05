@@ -129,13 +129,13 @@ def one_cycle(lr_factor=10, anneal_share=1/10, anneal_factor=100):
     """The triangle from clr, plus additional annealing to a tiny factor."""
 
     core = clr(lr_factor)
-    finish_factor = lr_factor * anneal_factor
-    finish = line(1/lr_factor, 1/finish_factor)
+    finish = line(1/lr_factor, 1/lr_factor/anneal_factor)
     return Chain(core, finish, first_share=1-anneal_share)
 
 
 def one_cycle_momentum(y0, y1, anneal_share=1/10):
     """A linear shape from y0 to y1, back to y0, and then flat to anneal."""
 
-    core = Chain(line(y0, y1), line(y1, y0))
-    return Chain(core, const(y0), first_share=1-anneal_share)
+    core = triangle(y0, y1)
+    finish = const(y0)
+    return Chain(core, finish, first_share=1-anneal_share)
