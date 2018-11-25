@@ -48,7 +48,7 @@ def clr(optim, nb, lr_factor=10, momentums=None, wds=None):
     return Schedule(optim, nb, _filter_nones({
         'lr': shape.clr(lr_factor),
         'momentum': _tuple_shape(momentums),
-        'wds': _tuple_shape(wds),
+        'wd': _tuple_shape(wds),
     }))
 
 
@@ -64,7 +64,7 @@ def one_cycle(
     return Schedule(optim, nb, _filter_nones({
         'lr': shape.one_cycle(lr_factor, anneal_share, anneal_factor),
         'momentum': shape.one_cycle_momentum(momentums[0], momentums[1], anneal_share),
-        'wds': _tuple_shape(wds),
+        'wd': _tuple_shape(wds),
     }))
 
 
