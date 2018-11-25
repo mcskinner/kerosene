@@ -44,10 +44,11 @@ def nop():
     return Schedule(None, 0, {})
 
 
-def clr(optim, nb, lr_factor=10, momentums=None):
+def clr(optim, nb, lr_factor=10, momentums=None, wds=None):
     return Schedule(optim, nb, _filter_nones({
         'lr': shape.clr(lr_factor),
-        'momentum': _momentum_shape(momentums),
+        'momentum': _tuple_shape(momentums),
+        'wds': _tuple_shape(wds),
     }))
 
 
@@ -57,11 +58,13 @@ def one_cycle(
     lr_factor=10,
     momentums=(0.95, 0.85),
     anneal_share=1/10,
-    anneal_factor=100
+    anneal_factor=100,
+    wds=None,
 ):
     return Schedule(optim, nb, _filter_nones({
         'lr': shape.one_cycle(lr_factor, anneal_share, anneal_factor),
         'momentum': shape.one_cycle_momentum(momentums[0], momentums[1], anneal_share),
+        'wds': _tuple_shape(wds),
     }))
 
 
@@ -69,9 +72,9 @@ def _filter_nones(m):
     return {k: v for k, v in m.items() if v is not None}
 
 
-def _momentum_shape(momentums):
-    if momentums is None:
+def _tuple_shape(vals):
+    if vals is None:
         return None
-    if util.is_listy(momentums):
-        return shape.triangle(*momentums)
-    return shape.const(momentums)
+    if util.is_listy(vals):
+        return shape.triangle(*vals)
+    return shape.const(vals)
