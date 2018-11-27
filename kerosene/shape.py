@@ -125,6 +125,20 @@ def stlr(lr_factor=10, up_share=1/4):
     return Chain(up, down, first_share=up_share)
 
 
+def stlr_momentum(y0, y1, up_share=1/4):
+    """A linear shape from y0 to y1 for up_share of the time, then back to y0."""
+
+    up = line(y0, y1)
+    down = line(y1, y0)
+    return Chain(up, down, first_share=up_share)
+
+
+def burn_in(y0, y1, up_share=1/10):
+    """A linear shape from y0 to y1 for up_share of the time, then stay at y1."""
+
+    return Chain(line(y0, y1), const(y1), first_share=up_share)
+
+
 def one_cycle(lr_factor=10, anneal_share=1/10, anneal_factor=100):
     """The triangle from clr, plus additional annealing to a tiny factor."""
 
