@@ -62,7 +62,7 @@ def stlr(optim, nb, lr_factor=10, up_share=1/4, momentums=None, wds=None):
 
 def burn_in(optim, nb, lr_factor=10, up_share=1/10, momentum=None, wd=None):
     return Schedule(optim, nb, _filter_nones({
-        'lr': shape.burn_in(lr_factor, up_share),
+        'lr': shape.burn_in(lr_factor, up_share=up_share),
         'momentum': None if momentum is None else shape.const(momentum),
         'wd': None if wd is None else shape.const(wd),
     }))

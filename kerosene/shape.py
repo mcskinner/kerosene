@@ -133,10 +133,10 @@ def stlr_momentum(y0, y1, up_share=1/4):
     return Chain(up, down, first_share=up_share)
 
 
-def burn_in(y0, y1, up_share=1/10):
-    """A linear shape from y0 to y1 for up_share of the time, then stay at y1."""
+def burn_in(lr_factor, up_share=1/10):
+    """A linear shape from 1/lr_factor to 1 for up_share of the time, then stay at 1."""
 
-    return Chain(line(y0, y1), const(y1), first_share=up_share)
+    return Chain(line(1/lr_factor, 1), const(1), first_share=up_share)
 
 
 def one_cycle(lr_factor=10, anneal_share=1/10, anneal_factor=100):
